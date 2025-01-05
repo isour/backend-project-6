@@ -5,7 +5,7 @@ import fastify from 'fastify';
 
 import init from '../server/plugin.js';
 import encrypt from '../server/lib/secure.cjs';
-import { getTestData, prepareData } from './helpers/index.js';
+import { getTestData, prepareData, logIn } from './helpers/index.js';
 
 describe('test users CRUD', () => {
   let app;
@@ -60,7 +60,6 @@ describe('test users CRUD', () => {
         data: params,
       },
     });
-
     expect(response.statusCode).toBe(302);
     const expected = {
       ..._.omit(params, 'password'),
@@ -68,6 +67,48 @@ describe('test users CRUD', () => {
     };
     const user = await models.user.query().findOne({ email: params.email });
     expect(user).toMatchObject(expected);
+  });
+
+  it('update', async () => {
+    const cookies = await logIn(app, testData.users.existing);
+
+    const current = await models.user.query().findOne({ email: testData.users.existing.email });
+
+    const params = testData.users.update;
+    const response = await app.inject({
+      method: 'PATCH',
+      url: app.reverse('user', { id: current.id }),
+      cookies,
+      payload: {
+        data: params,
+      },
+    });
+
+    expect(response.statusCode).toBe(302);
+
+    const expected = {
+      ..._.omit(params, 'password'),
+      passwordDigest: encrypt(params.password),
+    };
+    const user = await models.user.query().findOne({ email: params.email });
+    expect(user).toMatchObject(expected);
+  });
+
+  it('delete', async () => {
+    const cookies = await logIn(app, testData.users.delete);
+
+    const current = await models.user.query().findOne({ email: testData.users.delete.email });
+
+    const response = await app.inject({
+      method: 'DELETE',
+      url: app.reverse('user', { id: current.id }),
+      cookies,
+    });
+console.log(response);
+    expect(response.statusCode).toBe(302);
+
+    const user = await models.user.query().findById(current.id);
+    expect(user).toBeUndefined();
   });
 
   afterEach(async () => {

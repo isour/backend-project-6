@@ -2,7 +2,7 @@
 
 export default {
   translation: {
-    appName: 'Fastify Шаблон',
+    appName: 'Менеджер задач',
     flash: {
       session: {
         create: {
@@ -18,8 +18,13 @@ export default {
           error: 'Не удалось зарегистрировать',
           success: 'Пользователь успешно зарегистрирован',
         },
+        edit: {
+          error: 'Ошибка редактирования',
+          success: 'Успешно сохранено',
+        },
+        noAccess: 'У вас нет прав доступа',
       },
-      authError: 'Доступ запрещён! Пожалуйста, авторизируйтесь.',
+      authError: 'Доступ запрещён! Пожалуйста, авторизируйтесь.'
     },
     layouts: {
       application: {
@@ -44,6 +49,9 @@ export default {
           submit: 'Сохранить',
           signUp: 'Регистрация',
         },
+        change: 'Изменить',
+        delete: 'Сохранить',
+        actions: 'Действия'
       },
       welcome: {
         index: {
@@ -52,6 +60,19 @@ export default {
           more: 'Узнать Больше',
         },
       },
+      user: {
+        firstName: 'Имя',
+        lastName: 'Фамилия',
+        email: 'Email',
+        password: 'Пароль',
+        new: {
+          submit: 'Сохранить'
+        },
+        edit: {
+          title: 'Изменение пользователя',
+          submit: 'Изменить',
+        },
+      }
     },
   },
 };

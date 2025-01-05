@@ -2,11 +2,27 @@
   "users": {
     "new": {
       "email": "malika_hodkiewicz75@live.com",
-      "password": "RLJvaIgPOnX5r03"
+      "password": "RLJvaIgPOnX5r03",
+      "firstName": "new user name",
+      "lastName": "new user last"
     },
     "existing": {
       "email": "lawrence.kulas87@outlook.com",
-      "password": "O6AvLIQL1cbzrre"
+      "password": "O6AvLIQL1cbzrre",
+      "firstName": "existing user name",
+      "lastName": "existing user last"
+    },
+    "update": {
+      "email": "updated@live.com",
+      "password": "dmaksdmas",
+      "firstName": "updated user name",
+      "lastName": "updated user last"
+    },
+    "delete": {
+      "email": "lawrence.kulas87@outlook.com",
+      "password": "O6AvLIQL1cbzrre",
+      "firstName": "updated user name",
+      "lastName": "updated user last"
     }
   }
 }

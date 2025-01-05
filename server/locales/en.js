@@ -2,7 +2,7 @@
 
 export default {
   translation: {
-    appName: 'Fastify Boilerplate',
+    appName: 'Task Manager',
     flash: {
       session: {
         create: {
@@ -18,6 +18,11 @@ export default {
           error: 'Failed to register',
           success: 'User registered successfully',
         },
+        edit: {
+          error: 'Failed to edit',
+          success: 'User saved successfully',
+        },
+        noAccess: 'You dont have access'
       },
       authError: 'Access denied! Please login',
     },
@@ -44,6 +49,9 @@ export default {
           submit: 'Register',
           signUp: 'Register',
         },
+        change: 'Change',
+        delete: 'Delete',
+        actions: 'Actions'
       },
       welcome: {
         index: {
@@ -52,6 +60,19 @@ export default {
           more: 'Learn more',
         },
       },
+      user: {
+        firstName: 'Name',
+        lastName: 'Surname',
+        email: 'Email',
+        password: 'Password',
+        new: {
+          submit: 'Save'
+        },
+        edit: {
+          title: 'Change user',
+          submit: 'Change',
+        },
+      }
     },
   },
 };

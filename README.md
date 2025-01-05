@@ -1,3 +1,5 @@
+[https://backend-project-6-snpm.onrender.com/] https://backend-project-6-snpm.onrender.com/
+
 # fastify-nodejs-application
 
 [![Node CI](https://github.com/hexlet-boilerplates/fastify-nodejs-application/workflows/Node%20CI/badge.svg)](https://github.com/hexlet-boilerplates/fastify-nodejs-application/actions)

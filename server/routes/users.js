@@ -22,11 +22,76 @@ export default (app) => {
         await app.objection.models.user.query().insert(validUser);
         req.flash('info', i18next.t('flash.users.create.success'));
         reply.redirect(app.reverse('root'));
-      } catch ({ data }) {
+      } catch (err) {
         req.flash('error', i18next.t('flash.users.create.error'));
-        reply.render('users/new', { user, errors: data });
+        reply.render('users/new', { user, errors: err.data });
       }
 
       return reply;
-    });
+    })
+    .get('/users/:id/edit', { name: 'editUser'}, async (req, reply) => {
+      const { id } = req.params;
+
+      if(Number(id) !== req.user.id) {
+        req.flash('error', i18next.t('flash.users.noAccess'));
+        reply.redirect(app.reverse('users'));
+        return reply;
+      }
+
+      const user = await app.objection.models.user.query().findById(id);
+      reply.render('users/edit', { user });
+      return reply;
+    })
+    .patch('/users/:id', { name: 'user', preValidation: app.authenticate }, async (req, reply) => {
+      const { id } = req.params;
+      const { firstName, lastName, email, password } = req.body.data;
+
+      if(Number(id) !== req.user.id) {
+        req.flash('error', i18next.t('flash.users.noAccess'));
+        reply.redirect(app.reverse('users'));
+        return reply;
+      }
+
+      const user = await app.objection.models.user.query().findById(id);
+
+      try {
+        await user.$query().patch({
+          firstName,
+          lastName,
+          email,
+          password
+        });
+
+        req.flash('info', i18next.t('flash.users.edit.success'));
+        reply.redirect(app.reverse('users'));
+      } catch({ data }) {
+        req.flash('error', i18next.t('flash.users.edit.error'));
+        reply.code(422);
+        user.$set(req.body.user);
+        reply.render('users/edit', { user, errors: data });
+      }
+
+      return reply;
+    })
+    .delete('/users/:id', { preValidation: app.authenticate }, async (req, reply) => {
+      const { id } = req.params;
+
+      if(Number(id) !== req.user.id) {
+        req.flash('error', i18next.t('flash.users.noAccess'));
+        reply.redirect(app.reverse('users'));
+        return reply;
+      }
+
+      try {
+        await app.objection.models.user.query().deleteById(req.user.id);
+        req.logOut();
+        req.flash('info', i18next.t('flash.user.delete.success'));
+      } catch({ data }) {
+        req.flash('error', i18next.t('flash.user.delete.error'));
+      }
+
+      reply.redirect(app.reverse('users'));
+      return reply;
+
+    })
 };
