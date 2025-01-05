@@ -27,10 +27,12 @@ export const test = {
 };
 
 export const production = {
-  client: 'sqlite3',
-  connection: {
-    filename: path.resolve(__dirname, 'database.sqlite'),
-  },
+  // client: 'sqlite3',
+  // connection: {
+  //   filename: path.resolve(__dirname, 'database.sqlite'),
+  // },
+  client: 'pg',
+  connection: process.env.DATABASE_URL,
   useNullAsDefault: true,
   migrations,
 };
