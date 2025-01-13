@@ -24,7 +24,7 @@ export default {
         },
         noAccess: 'У вас нет прав доступа',
       },
-      authError: 'Доступ запрещён! Пожалуйста, авторизируйтесь.'
+      authError: 'Доступ запрещён! Пожалуйста, авторизируйтесь.',
     },
     layouts: {
       application: {
@@ -32,6 +32,7 @@ export default {
         signIn: 'Вход',
         signUp: 'Регистрация',
         signOut: 'Выход',
+        statuses: 'Статусы',
       },
     },
     views: {
@@ -51,7 +52,7 @@ export default {
         },
         change: 'Изменить',
         delete: 'Сохранить',
-        actions: 'Действия'
+        actions: 'Действия',
       },
       welcome: {
         index: {
@@ -66,13 +67,13 @@ export default {
         email: 'Email',
         password: 'Пароль',
         new: {
-          submit: 'Сохранить'
+          submit: 'Сохранить',
         },
         edit: {
           title: 'Изменение пользователя',
           submit: 'Изменить',
         },
-      }
+      },
     },
   },
 };

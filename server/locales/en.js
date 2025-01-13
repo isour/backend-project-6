@@ -22,7 +22,20 @@ export default {
           error: 'Failed to edit',
           success: 'User saved successfully',
         },
-        noAccess: 'You dont have access'
+        noAccess: 'You dont have access',
+      },
+      statuses: {
+        create: {
+          error: 'Failed to create',
+          success: 'Status created successfully',
+        },
+        edit: {
+          error: 'Failed to edit',
+          success: 'Status saved successfully',
+        },
+        delete: {
+          success: 'You deleted status',
+        },
       },
       authError: 'Access denied! Please login',
     },
@@ -32,6 +45,7 @@ export default {
         signIn: 'Login',
         signUp: 'Register',
         signOut: 'Logout',
+        statuses: 'Statuses',
       },
     },
     views: {
@@ -51,7 +65,7 @@ export default {
         },
         change: 'Change',
         delete: 'Delete',
-        actions: 'Actions'
+        actions: 'Actions',
       },
       welcome: {
         index: {
@@ -66,13 +80,34 @@ export default {
         email: 'Email',
         password: 'Password',
         new: {
-          submit: 'Save'
+          submit: 'Save',
         },
         edit: {
           title: 'Change user',
           submit: 'Change',
         },
-      }
+      },
+      statuses: {
+        title: 'Statuses',
+        create: 'Create',
+        id: 'ID',
+        name: 'Name',
+        createdAt: 'Created at',
+        new: {
+          title: 'Create status',
+          submit: 'Create',
+        },
+        edit: {
+          title: 'Update status',
+          submit: 'Update',
+        },
+        change: 'Change',
+        delete: 'Delete',
+        actions: 'Actions',
+      },
+      taskStatus: {
+        name: 'Name',
+      },
     },
   },
 };
