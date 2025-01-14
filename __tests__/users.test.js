@@ -16,7 +16,7 @@ describe('test users CRUD', () => {
   beforeAll(async () => {
     app = fastify({
       exposeHeadRoutes: false,
-      logger: { target: 'pino-pretty' },
+      // logger: { target: 'pino-pretty' },
     });
     await init(app);
     knex = app.objection.knex;
@@ -30,8 +30,7 @@ describe('test users CRUD', () => {
     await prepareData(app);
   });
 
-  beforeEach(async () => {
-  });
+  beforeEach(async () => {});
 
   it('index', async () => {
     const response = await app.inject({
@@ -72,7 +71,9 @@ describe('test users CRUD', () => {
   it('update', async () => {
     const cookies = await logIn(app, testData.users.existing);
 
-    const current = await models.user.query().findOne({ email: testData.users.existing.email });
+    const current = await models.user
+      .query()
+      .findOne({ email: testData.users.existing.email });
 
     const params = testData.users.update;
     const response = await app.inject({
@@ -97,24 +98,20 @@ describe('test users CRUD', () => {
   it('delete', async () => {
     const cookies = await logIn(app, testData.users.delete);
 
-    const current = await models.user.query().findOne({ email: testData.users.delete.email });
+    const current = await models.user
+      .query()
+      .findOne({ email: testData.users.delete.email });
 
     const response = await app.inject({
       method: 'DELETE',
       url: app.reverse('user', { id: current.id }),
       cookies,
     });
-console.log(response);
+
     expect(response.statusCode).toBe(302);
 
     const user = await models.user.query().findById(current.id);
     expect(user).toBeUndefined();
-  });
-
-  afterEach(async () => {
-    // Пока Segmentation fault: 11
-    // после каждого теста откатываем миграции
-    // await knex.migrate.rollback();
   });
 
   afterAll(async () => {

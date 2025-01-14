@@ -19,10 +19,24 @@
       "lastName": "updated user last"
     },
     "delete": {
-      "email": "lawrence.kulas87@outlook.com",
+      "email": "lawrence.kulas871@outlook.com",
       "password": "O6AvLIQL1cbzrre",
-      "firstName": "updated user name",
-      "lastName": "updated user last"
+      "firstName": "deleted user name",
+      "lastName": "deleted user last"
+    }
+  },
+  "statuses": {
+    "new": {
+      "name": "new status"
+    },
+    "existing": {
+      "name": "existing status"
+    },
+    "update": {
+      "name": "update status"
+    },
+    "delete": {
+      "name": "deleted status"
     }
   }
 }

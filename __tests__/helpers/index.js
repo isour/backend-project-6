@@ -6,8 +6,12 @@ import path from 'path';
 
 // TODO: использовать для фикстур https://github.com/viglucci/simple-knex-fixtures
 
-const getFixturePath = (filename) => path.join('..', '..', '__fixtures__', filename);
-const readFixture = (filename) => fs.readFileSync(new URL(getFixturePath(filename), import.meta.url), 'utf-8').trim();
+const getFixturePath = (filename) =>
+  path.join('..', '..', '__fixtures__', filename);
+const readFixture = (filename) =>
+  fs
+    .readFileSync(new URL(getFixturePath(filename), import.meta.url), 'utf-8')
+    .trim();
 const getFixtureData = (filename) => JSON.parse(readFixture(filename));
 
 export const getTestData = () => getFixtureData('testData.json');
@@ -17,6 +21,7 @@ export const prepareData = async (app) => {
 
   // получаем данные из фикстур и заполняем БД
   await knex('users').insert(getFixtureData('users.json'));
+  await knex('task_statuses').insert(getFixtureData('taskStatuses.json'));
 };
 
 export const logIn = async (app, params) => {
@@ -32,10 +37,10 @@ export const logIn = async (app, params) => {
     if (cookie.name === 'session') {
       return {
         ...acc,
-        [cookie.name]: cookie.value
-      }
+        [cookie.name]: cookie.value,
+      };
     }
 
     return acc;
   }, {});
-}
+};

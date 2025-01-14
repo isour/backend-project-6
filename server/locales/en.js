@@ -22,6 +22,10 @@ export default {
           error: 'Failed to edit',
           success: 'User saved successfully',
         },
+        delete: {
+          error: 'Failed to delete',
+          success: 'You deleted user',
+        },
         noAccess: 'You dont have access',
       },
       statuses: {

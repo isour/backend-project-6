@@ -55,16 +55,13 @@ export default (app) => {
       { name: 'status', preValidation: app.authenticate },
       async (req, reply) => {
         const { id } = req.params;
-        const { name } = req.body.data;
 
         const status = await app.objection.models.taskStatus
           .query()
           .findById(id);
 
         try {
-          await status.$query().patch({
-            name,
-          });
+          await status.$query().patch(req.body.data);
 
           req.flash('info', i18next.t('flash.statuses.edit.success'));
           reply.redirect(app.reverse('statuses'));
