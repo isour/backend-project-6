@@ -38,5 +38,35 @@
     "delete": {
       "name": "deleted status"
     }
+  },
+  "tasks": {
+    "new": {
+      "name": "new task",
+      "description": "description of new task",
+      "statusId": 1,
+      "creatorId": 2,
+      "executorId": 1
+    },
+    "existing": {
+      "name": "existing task",
+      "description": "description of existing task",
+      "statusId": 2,
+      "creatorId": 2,
+      "executorId": 2
+    },
+    "update": {
+      "name": "update task",
+      "description": "updated description of task",
+      "statusId": 3,
+      "creatorId": 2,
+      "executorId": 3
+    },
+    "delete": {
+      "name": "deleted task",
+      "description": "description of deleted task",
+      "statusId": 1,
+      "creatorId": 2,
+      "executorId": 3
+    }
   }
 }

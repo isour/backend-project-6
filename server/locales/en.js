@@ -50,6 +50,7 @@ export default {
         signUp: 'Register',
         signOut: 'Logout',
         statuses: 'Statuses',
+        tasks: 'Tasks',
       },
     },
     views: {
@@ -108,6 +109,31 @@ export default {
         change: 'Change',
         delete: 'Delete',
         actions: 'Actions',
+      },
+      tasks: {
+        title: 'Tasks',
+        create: 'Create',
+        id: 'ID',
+        name: 'Name',
+        description: 'Description',
+        createdAt: 'Created at',
+        new: {
+          title: 'Create task',
+          submit: 'Create',
+        },
+        edit: {
+          title: 'Update task',
+          submit: 'Update',
+        },
+        change: 'Change',
+        delete: 'Delete',
+        actions: 'Actions',
+      },
+      task: {
+        name: 'Task name',
+        description: 'Description',
+        statusId: 'Status',
+        executorId: 'Executor',
       },
       taskStatus: {
         name: 'Name',

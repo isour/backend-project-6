@@ -21,14 +21,14 @@ module.exports = class TaskStatus extends unique(BaseModel) {
     };
   }
 
-  // static relationMappings = {
-  //   tasks: {
-  //     relation: BaseModel.HasManyRelation,
-  //     modelClass: 'Task.cjs',
-  //     join: {
-  //       from: 'task_statuses.id',
-  //       to: 'tasks.status_id',
-  //     },
-  //   },
-  // };
+  static relationMappings = {
+    tasks: {
+      relation: BaseModel.HasManyRelation,
+      modelClass: 'Task.cjs',
+      join: {
+        from: 'task_statuses.id',
+        to: 'tasks.status_id',
+      },
+    },
+  };
 };

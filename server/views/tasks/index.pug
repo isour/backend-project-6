@@ -1,0 +1,28 @@
+extends ../layouts/application.pug
+
+block header
+  = t('views.tasks.title')
+
+block content
+  a.btn.btn-primary(href=route('newTask'))= t('views.tasks.create')
+  table.table.table-striped
+    thead
+      tr
+        th= t('views.tasks.id')
+        th= t('views.tasks.name')
+        th= t('views.tasks.description')
+        th= t('views.tasks.createdAt')
+        th= t('views.tasks.actions')
+    tbody
+      each task in tasks
+        tr
+          td= task.id
+          td= task.name
+          td= task.description
+          td= formatDate(task.createdAt)
+          td
+            .d-flex.flex-wrap
+              a.btn.btn-primary.me-1(href=route('editTask', { id: task.id }))= t('views.tasks.change')
+              form(action=route('task', { id: task.id }) method="post")
+                input(name="_method" type="hidden" value="delete")
+                input.btn.btn-danger(type="submit" value=t('views.tasks.delete'))

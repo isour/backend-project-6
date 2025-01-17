@@ -1,0 +1,16 @@
+[
+  {
+    "name": "existing task",
+    "description": "description of existing task",
+    "statusId": 2,
+    "creatorId": 2,
+    "executorId": 2
+  },
+  {
+    "name": "deleted task",
+    "description": "description of deleted task",
+    "statusId": 1,
+    "creatorId": 2,
+    "executorId": 3
+  }
+]

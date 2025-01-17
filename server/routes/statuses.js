@@ -43,13 +43,19 @@ export default (app) => {
         return reply;
       }
     )
-    .get('/statuses/:id/edit', { name: 'editStatus' }, async (req, reply) => {
-      const { id } = req.params;
+    .get(
+      '/statuses/:id/edit',
+      { preValidation: app.authenticate, name: 'editStatus' },
+      async (req, reply) => {
+        const { id } = req.params;
 
-      const status = await app.objection.models.taskStatus.query().findById(id);
-      reply.render('statuses/edit', { taskStatus: status });
-      return reply;
-    })
+        const status = await app.objection.models.taskStatus
+          .query()
+          .findById(id);
+        reply.render('statuses/edit', { taskStatus: status });
+        return reply;
+      }
+    )
     .patch(
       '/statuses/:id',
       { name: 'status', preValidation: app.authenticate },
