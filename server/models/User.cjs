@@ -36,4 +36,23 @@ module.exports = class User extends unique(BaseModel) {
   verifyPassword(password) {
     return encrypt(password) === this.passwordDigest;
   }
+
+  static relationMappings = {
+    creator: {
+      relation: BaseModel.BelongsToOneRelation,
+      modelClass: 'Task.cjs',
+      join: {
+        from: 'users.id',
+        to: 'tasks.creator_id',
+      },
+    },
+    executor: {
+      relation: BaseModel.BelongsToOneRelation,
+      modelClass: 'Task.cjs',
+      join: {
+        from: 'users.id',
+        to: 'tasks.executor_id',
+      },
+    },
+  };
 };

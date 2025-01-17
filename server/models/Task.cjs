@@ -40,5 +40,25 @@ module.exports = class Task extends unique(BaseModel) {
         to: 'users.id',
       },
     },
+    executor: {
+      relation: BaseModel.BelongsToOneRelation,
+      modelClass: 'User.cjs',
+      join: {
+        from: 'tasks.executor_id',
+        to: 'users.id',
+      },
+    },
+    labels: {
+      relation: BaseModel.ManyToManyRelation,
+      modelClass: 'Label.cjs',
+      join: {
+        from: 'tasks.id',
+        through: {
+          from: 'tasks_labels.task_id',
+          to: 'tasks_labels.label_id',
+        },
+        to: 'labels.id',
+      },
+    },
   };
 };

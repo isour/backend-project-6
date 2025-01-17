@@ -68,5 +68,19 @@
       "creatorId": 2,
       "executorId": 3
     }
+  },
+  "labels": {
+    "new": {
+      "name": "new label"
+    },
+    "existing": {
+      "name": "existing label"
+    },
+    "update": {
+      "name": "update label"
+    },
+    "delete": {
+      "name": "deleted label"
+    }
   }
 }
