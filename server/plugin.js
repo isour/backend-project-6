@@ -16,6 +16,7 @@ import fastifyObjectionjs from 'fastify-objectionjs';
 import qs from 'qs';
 import Pug from 'pug';
 import i18next from 'i18next';
+import Rollbar from 'rollbar';
 
 import ru from './locales/ru.js';
 import en from './locales/en.js';
@@ -29,7 +30,12 @@ import FormStrategy from './lib/passportStrategies/FormStrategy.js';
 const __dirname = fileURLToPath(path.dirname(import.meta.url));
 
 const mode = process.env.NODE_ENV || 'development';
-// const isDevelopment = mode === 'development';
+
+const rollbar = new Rollbar({
+  accessToken: process.env.ROLLBAR_KEY,
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+});
 
 const setUpViews = (app) => {
   const helpers = getHelpers(app);
@@ -59,16 +65,15 @@ const setUpStaticAssets = (app) => {
 };
 
 const setupLocalization = async () => {
-  await i18next
-    .init({
-      lng: 'en',
-      fallbackLng: 'ru',
-      // debug: isDevelopment,
-      resources: {
-        ru,
-        en,
-      },
-    });
+  await i18next.init({
+    lng: 'en',
+    fallbackLng: 'ru',
+    // debug: isDevelopment,
+    resources: {
+      ru,
+      en,
+    },
+  });
 };
 
 const addHooks = (app) => {
@@ -91,28 +96,42 @@ const registerPlugins = async (app) => {
     },
   });
 
-  fastifyPassport.registerUserDeserializer(
-    (user) => app.objection.models.user.query().findById(user.id),
+  fastifyPassport.registerUserDeserializer((user) =>
+    app.objection.models.user.query().findById(user.id)
   );
   fastifyPassport.registerUserSerializer((user) => Promise.resolve(user));
   fastifyPassport.use(new FormStrategy('form', app));
   await app.register(fastifyPassport.initialize());
   await app.register(fastifyPassport.secureSession());
   await app.decorate('fp', fastifyPassport);
-  app.decorate('authenticate', (...args) => fastifyPassport.authenticate(
-    'form',
-    {
-      failureRedirect: app.reverse('root'),
-      failureFlash: i18next.t('flash.authError'),
-    },
-  // @ts-ignore
-  )(...args));
+  app.decorate('authenticate', (...args) =>
+    fastifyPassport.authenticate(
+      'form',
+      {
+        failureRedirect: app.reverse('root'),
+        failureFlash: i18next.t('flash.authError'),
+      }
+      // @ts-ignore
+    )(...args)
+  );
 
   await app.register(fastifyMethodOverride);
   await app.register(fastifyObjectionjs, {
     knexConfig: knexConfig[mode],
     models,
   });
+
+  rollbar.log('error');
+
+  // await app.register(async function (fastify) {
+  //   // console.log('register ===================', fastify);
+  //   fastify.setErrorHandler((error, request, response) => {
+  //     rollbar.error(error, request);
+  //     rollbar.log(error);
+  //     // console.log('EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE');
+  //     response.status(500).send({ message: 'Server error' });
+  //   });
+  // });
 };
 
 export const options = {
@@ -128,6 +147,15 @@ export default async (app, _options) => {
   setUpStaticAssets(app);
   addRoutes(app);
   addHooks(app);
+
+  app.setErrorHandler((error, request, response) => {
+    rollbar.error(error);
+    console.log(
+      'EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE',
+      process.env.NODE_ENV
+    );
+    response.status(500).send({ message: 'Server error' });
+  });
 
   return app;
 };
