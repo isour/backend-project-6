@@ -58,3 +58,28 @@ mixin buttonTo(action, method)
   form(action=action, method="post")
     input(name="_method" type="hidden" value=method)
     input(type='submit')&attributes(attributes)
+
+mixin selectFilter(entityName, filterOptions, propertyName, options)
+  - inputId = getInputId(propertyName)
+  .input-group.mb-3
+    label.input-group-text(for= inputId)
+      = t(`views.${entityName}.filter.${propertyName}`)
+    select.form-select(id= inputId name= propertyName)&attributes(attributes)
+      option
+        each option in options
+          - isSelect = option.id === Number(filterOptions[propertyName]);
+          option(value= option.id selected= isSelect)= option.name
+
+mixin checkbox(entityName, filterOptions, propertyName)
+  - inputId = getInputId(propertyName)
+  .mb-3.form-check
+    input.form-check-input(
+      id= inputId
+      type='checkbox'
+      name= propertyName
+      checked= filterOptions[propertyName]
+    )
+    label.form-check-label(
+      for= inputId
+    )= t(`views.${entityName}.filter.${propertyName}`)
+

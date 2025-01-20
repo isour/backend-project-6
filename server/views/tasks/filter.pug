@@ -1,0 +1,12 @@
+.card.shadow-sm
+  .card-body.p-4
+    form(action=route('tasks') method='get')
+      .row
+        .col-12.col-md
+          +selectFilter('task', options, 'status', statuses)
+        .col-12.col-md
+          +selectFilter('task', options, 'executor', users)
+        .col-12.col-md
+          +selectFilter('task', options, 'label', labels)
+      +checkbox('task', options, 'isCreatorUser')
+      +submit()(value= t(`views.task.filter.submit`))

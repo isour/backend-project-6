@@ -23,8 +23,26 @@ module.exports = class Task extends unique(BaseModel) {
     };
   }
 
+  static modifiers = {
+    findByStatus(query, statusId) {
+      query.where({ statusId });
+    },
+    findByExecutor(query, executorId) {
+      query.where({ executorId });
+    },
+    findByCreator(query, creatorId) {
+      query.where({ creatorId });
+    },
+    findByLabel(query, labelId) {
+      query.where({ labelId });
+    },
+    sortByCreatedDate(query) {
+      query.orderBy('created_at', 'desc');
+    },
+  };
+
   static relationMappings = {
-    tasks: {
+    status: {
       relation: BaseModel.BelongsToOneRelation,
       modelClass: 'TaskStatus.cjs',
       join: {

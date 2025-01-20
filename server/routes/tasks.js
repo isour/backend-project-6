@@ -4,11 +4,47 @@ import i18next from 'i18next';
 
 export default (app) => {
   app
-    .get('/tasks', { name: 'tasks' }, async (req, reply) => {
-      const tasks = await app.objection.models.task.query();
-      reply.render('tasks/index', { tasks });
-      return reply;
-    })
+    .get(
+      '/tasks',
+      { name: 'tasks', preValidation: app.authenticate },
+      async (req, reply) => {
+        const options = req.query;
+        const statuses = await app.objection.models.taskStatus.query();
+        const users = await app.objection.models.user.query();
+        const labels = await app.objection.models.label.query();
+
+        const query = app.objection.models.task
+          .query()
+          .withGraphJoined('[status, creator, executor, labels]')
+          .modify('sortByCreatedDate');
+
+        const { status, executor, label, isCreatorUser } = options;
+        if (status) {
+          query.modify('findByStatus', status);
+        }
+        if (executor) {
+          query.modify('findByExecutor', executor);
+        }
+        if (isCreatorUser) {
+          query.modify('findByCreator', req.user.id);
+        }
+        if (label) {
+          query.modify('findByLabel', label);
+        }
+
+        const tasks = await query;
+
+        reply.render('tasks/index', {
+          tasks,
+          statuses,
+          users,
+          labels,
+          options,
+        });
+
+        return reply;
+      }
+    )
     .get(
       '/tasks/new',
       { name: 'newTask', preValidation: app.authenticate },
@@ -23,13 +59,14 @@ export default (app) => {
         return reply;
       }
     )
+
     .post('/tasks', { preValidation: app.authenticate }, async (req, reply) => {
       const task = new app.objection.models.task();
       const { data: formData } = req.body;
 
       const currentLabels = await app.objection.models.label
         .query()
-        .findByIds(formData.labels);
+        .findByIds(formData.labels ? formData.labels : []);
 
       const taskData = {
         ...formData,
@@ -98,7 +135,7 @@ export default (app) => {
 
         const currentLabels = await app.objection.models.label
           .query()
-          .findByIds(formData.labels);
+          .findByIds(formData.labels ? formData.label : []);
 
         const task = await app.objection.models.task.query().findById(id);
 

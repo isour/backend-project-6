@@ -165,6 +165,13 @@ export default {
         description: 'Description',
         statusId: 'Status',
         executorId: 'Executor',
+        filter: {
+          status: 'Status',
+          executor: 'Executor',
+          label: 'Label',
+          isCreatorUser: 'Only my tasks',
+          submit: 'Show',
+        },
       },
       taskStatus: {
         name: 'Name',
