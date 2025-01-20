@@ -33,6 +33,7 @@ const mode = process.env.NODE_ENV || 'development';
 
 const rollbar = new Rollbar({
   accessToken: process.env.ROLLBAR_KEY,
+  environment: process.env.NODE_ENV || 'development', // или 'production'
   captureUncaught: true,
   captureUnhandledRejections: true,
 });
@@ -120,8 +121,6 @@ const registerPlugins = async (app) => {
     knexConfig: knexConfig[mode],
     models,
   });
-
-  rollbar.log('error');
 
   // await app.register(async function (fastify) {
   //   // console.log('register ===================', fastify);
