@@ -106,15 +106,15 @@ export default {
       },
       welcome: {
         index: {
-          hello: 'Привет от Hexlet!',
-          description: 'Онлайн-школа программирования',
-          more: 'Узнать больше',
+          hello: 'Привет от Хекслета!',
+          description: 'Практические курсы по программированию',
+          more: 'Узнать Больше',
         },
       },
       user: {
         firstName: 'Имя',
         lastName: 'Фамилия',
-        email: 'Электронная почта',
+        email: 'Email',
         password: 'Пароль',
         new: {
           submit: 'Сохранить',
@@ -127,7 +127,7 @@ export default {
       statuses: {
         title: 'Статусы',
         create: 'Создать',
-        id: 'Идентификатор',
+        id: 'ID',
         name: 'Название',
         createdAt: 'Дата создания',
         new: {
@@ -145,8 +145,8 @@ export default {
       tasks: {
         title: 'Задачи',
         create: 'Создать',
-        id: 'Идентификатор',
-        name: 'Название',
+        id: 'ID',
+        name: 'Наименование',
         description: 'Описание',
         createdAt: 'Дата создания',
         new: {
