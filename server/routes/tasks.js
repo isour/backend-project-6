@@ -8,7 +8,6 @@ export default (app) => {
       '/tasks',
       { name: 'tasks', preValidation: app.authenticate },
       async (req, reply) => {
-        throw new Error('Test error');
         const options = req.query;
         const statuses = await app.objection.models.taskStatus.query();
         const users = await app.objection.models.user.query();
