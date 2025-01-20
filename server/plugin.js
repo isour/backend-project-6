@@ -150,10 +150,6 @@ export default async (app, _options) => {
 
   app.setErrorHandler((error, request, response) => {
     rollbar.error(error);
-    console.log(
-      'EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE',
-      process.env.NODE_ENV
-    );
     response.status(500).send({ message: 'Server error' });
   });
 
