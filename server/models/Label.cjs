@@ -1,11 +1,11 @@
 // @ts-check
 
 const BaseModel = require('./BaseModel.cjs');
-const objectionUnique = require('objection-unique');
+// const objectionUnique = require('objection-unique');
 
-const unique = objectionUnique({ fields: ['name'] });
+// const unique = objectionUnique({ fields: ['name'] });
 
-module.exports = class Label extends unique(BaseModel) {
+module.exports = class Label extends BaseModel {
   static get tableName() {
     return 'labels';
   }

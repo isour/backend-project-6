@@ -9,80 +9,139 @@ export default (app) => {
       reply.render('tasks/index', { tasks });
       return reply;
     })
-    .get('/tasks/new', { name: 'newTask' }, async (req, reply) => {
-      const task = new app.objection.models.task();
-      const users = await app.objection.models.user.query();
-      const statuses = await app.objection.models.taskStatus.query();
+    .get(
+      '/tasks/new',
+      { name: 'newTask', preValidation: app.authenticate },
+      async (req, reply) => {
+        const task = new app.objection.models.task();
+        const users = await app.objection.models.user.query();
+        const statuses = await app.objection.models.taskStatus.query();
+        const labels = await app.objection.models.label.query();
 
-      reply.render('tasks/new', { task, statuses, users });
+        reply.render('tasks/new', { task, statuses, users, labels });
 
-      return reply;
-    })
-    .post('/tasks', async (req, reply) => {
+        return reply;
+      }
+    )
+    .post('/tasks', { preValidation: app.authenticate }, async (req, reply) => {
       const task = new app.objection.models.task();
+      const { data: formData } = req.body;
+
+      const currentLabels = await app.objection.models.label
+        .query()
+        .findByIds(formData.labels);
 
       const taskData = {
-        ...req.body.data,
+        ...formData,
         statusId: Number(req.body.data.statusId),
         executorId: Number(req.body.data.executorId),
         creatorId: req.user.id,
+        labels: currentLabels,
       };
 
       try {
-        await app.objection.models.task.query().insert(taskData);
+        await app.objection.models.task.transaction(async (trans) => {
+          const insertedTask = await app.objection.models.task
+            .query(trans)
+            .insertGraph(taskData, { relate: ['labels'] });
+          return insertedTask;
+        });
+
         req.flash('info', i18next.t('flash.tasks.create.success'));
         reply.redirect(app.reverse('tasks'));
       } catch (err) {
         const users = await app.objection.models.user.query();
         const statuses = await app.objection.models.taskStatus.query();
+        const labels = await app.objection.models.label.query();
 
-        task.$set(taskData);
+        task.$set(formData);
         req.flash('error', i18next.t('flash.tasks.create.error'));
         reply.code(422);
-        reply.render('tasks/new', { task, statuses, users, errors: err.data });
+        reply.render('tasks/new', {
+          task,
+          statuses,
+          users,
+          labels,
+          errors: err.data,
+        });
       }
 
       return reply;
     })
-    .get('/tasks/:id/edit', { name: 'editTask' }, async (req, reply) => {
-      const { id } = req.params;
+    .get(
+      '/tasks/:id/edit',
+      { name: 'editTask', preValidation: app.authenticate },
+      async (req, reply) => {
+        const { id } = req.params;
 
-      const task = await app.objection.models.task.query().findById(id);
+        const task = await app.objection.models.task
+          .query()
+          .findById(id)
+          .withGraphJoined('labels');
 
-      const users = await app.objection.models.user.query();
-      const statuses = await app.objection.models.taskStatus.query();
+        const users = await app.objection.models.user.query();
+        const statuses = await app.objection.models.taskStatus.query();
+        const labels = await app.objection.models.label.query();
+        task.$set({ ...task, labels: task.labels.map((label) => label.id) });
 
-      reply.render('tasks/edit', { task, statuses, users });
-      return reply;
-    })
+        reply.render('tasks/edit', { task, statuses, users, labels });
+        return reply;
+      }
+    )
     .patch(
       '/tasks/:id',
       { name: 'task', preValidation: app.authenticate },
       async (req, reply) => {
         const { id } = req.params;
 
+        const { data: formData } = req.body;
+
+        const currentLabels = await app.objection.models.label
+          .query()
+          .findByIds(formData.labels);
+
         const task = await app.objection.models.task.query().findById(id);
 
         const taskData = {
-          ...req.body.data,
+          ...task,
+          ...formData,
           statusId: Number(req.body.data.statusId),
           executorId: Number(req.body.data.executorId),
-          creatorId: req.user.id,
+          labels: currentLabels,
         };
 
         try {
-          await task.$query().patch(taskData);
+          await app.objection.models.task.transaction(async (trans) => {
+            const updatedTask = await app.objection.models.task
+              .query(trans)
+              .allowGraph('labels')
+              .upsertGraph(taskData, {
+                relate: true,
+                unrelate: true,
+                noDelete: true,
+              });
+
+            return updatedTask;
+          });
 
           req.flash('info', i18next.t('flash.tasks.edit.success'));
           reply.redirect(app.reverse('tasks'));
         } catch ({ data }) {
-          req.flash('error', i18next.t('flash.tasks.edit.error'));
-          reply.code(422);
-          task.$set(req.body.user);
-
           const users = await app.objection.models.user.query();
           const statuses = await app.objection.models.taskStatus.query();
-          reply.render('tasks/edit', { task, statuses, users, errors: data });
+          const labels = await app.objection.models.label.query();
+          task.$set({ ...formData, id });
+
+          req.flash('error', i18next.t('flash.tasks.edit.error'));
+          reply.code(422);
+
+          reply.render('tasks/edit', {
+            task,
+            statuses,
+            users,
+            labels,
+            errors: data,
+          });
         }
 
         return reply;
@@ -103,7 +162,9 @@ export default (app) => {
         }
 
         try {
-          await app.objection.models.task.query().deleteById(id);
+          await task.$relatedQuery('labels').unrelate();
+          await task.$query().delete();
+
           req.flash('info', i18next.t('flash.tasks.delete.success'));
         } catch ({ data }) {
           req.flash('error', i18next.t('flash.tasks.delete.error'));

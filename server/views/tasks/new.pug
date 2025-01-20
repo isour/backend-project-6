@@ -9,4 +9,5 @@ block content
     +input(task, 'description', errors)(type="text")
     +select(task, 'statusId', errors, statuses)
     +select(task, 'executorId', errors, users)
+    +select(task, 'labels', errors, labels)(multiple)
     +submit(status)(value=t('views.tasks.new.submit'))
