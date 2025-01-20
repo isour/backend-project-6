@@ -95,6 +95,7 @@ export default {
       users: {
         id: 'ID',
         email: 'Email',
+        fullName: 'Имя и фамилия',
         createdAt: 'Дата создания',
         new: {
           submit: 'Сохранить',
