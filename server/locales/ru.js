@@ -164,7 +164,7 @@ export default {
         actions: 'Действия',
       },
       task: {
-        name: 'Название задачи',
+        name: 'Наименование',
         description: 'Описание',
         statusId: 'Статус',
         executorId: 'Исполнитель',
@@ -177,7 +177,7 @@ export default {
         },
       },
       taskStatus: {
-        name: 'Имя',
+        name: 'Наименование',
       },
       labels: {
         title: 'Метки',
@@ -198,7 +198,7 @@ export default {
         actions: 'Действия',
       },
       label: {
-        name: 'Имя метки',
+        name: 'Наименование',
       },
     },
   },
