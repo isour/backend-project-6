@@ -137,7 +137,7 @@ export default {
         },
         edit: {
           title: 'Обновление статуса',
-          submit: 'Обновить',
+          submit: 'Изменить',
         },
         change: 'Изменить',
         delete: 'Удалить',
@@ -157,7 +157,7 @@ export default {
         },
         edit: {
           title: 'Обновление задачи',
-          submit: 'Обновить',
+          submit: 'Изменить',
         },
         change: 'Изменить',
         delete: 'Удалить',
