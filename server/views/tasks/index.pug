@@ -19,7 +19,8 @@ block content
       each task in tasks
         tr
           td= task.id
-          td= task.name
+          td
+            a(href=route('task', { id: task.id }))= task.name
           td= task.status.name
           td= task.description
           td= formatDate(task.createdAt)

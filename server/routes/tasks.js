@@ -127,7 +127,7 @@ export default (app) => {
     )
     .patch(
       '/tasks/:id',
-      { name: 'task', preValidation: app.authenticate },
+      { preValidation: app.authenticate },
       async (req, reply) => {
         const { id } = req.params;
 
@@ -208,6 +208,20 @@ export default (app) => {
         }
 
         reply.redirect(app.reverse('tasks'));
+        return reply;
+      }
+    )
+    .get(
+      '/tasks/:id',
+      { name: 'task', preValidation: app.authenticate },
+      async (req, reply) => {
+        const { id } = req.params;
+        const task = await app.objection.models.task
+          .query()
+          .findById(id)
+          .withGraphJoined('[status, creator, executor, labels]');
+
+        reply.render('tasks/inner', { task });
         return reply;
       }
     );

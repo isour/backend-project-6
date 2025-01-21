@@ -168,6 +168,9 @@ export default {
         description: 'Описание',
         statusId: 'Статус',
         executorId: 'Исполнитель',
+        creator: 'Автор',
+        executor: 'Исполнитель',
+        createdAt: 'Дата создания',
         filter: {
           status: 'Статус',
           executor: 'Исполнитель',
