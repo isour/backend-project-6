@@ -129,7 +129,7 @@ export default {
         title: 'Статусы',
         create: 'Создать статус',
         id: 'ID',
-        name: 'Название',
+        name: 'Наименование',
         createdAt: 'Дата создания',
         new: {
           title: 'Создание статуса',
@@ -148,6 +148,7 @@ export default {
         create: 'Создать задачу',
         id: 'ID',
         name: 'Наименование',
+        status: 'Статус',
         description: 'Описание',
         createdAt: 'Дата создания',
         new: {
