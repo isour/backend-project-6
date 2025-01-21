@@ -191,7 +191,7 @@ export default {
         },
         edit: {
           title: 'Обновить метка',
-          submit: 'Метка',
+          submit: 'Обновить',
         },
         change: 'Изменить',
         delete: 'Удалить',
