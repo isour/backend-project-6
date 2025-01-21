@@ -127,7 +127,7 @@ export default {
       },
       statuses: {
         title: 'Статусы',
-        create: 'Создать',
+        create: 'Создать статус',
         id: 'ID',
         name: 'Название',
         createdAt: 'Дата создания',
@@ -145,7 +145,7 @@ export default {
       },
       tasks: {
         title: 'Задачи',
-        create: 'Создать',
+        create: 'Создать задачу',
         id: 'ID',
         name: 'Наименование',
         description: 'Описание',
@@ -180,7 +180,7 @@ export default {
       },
       labels: {
         title: 'Метки',
-        create: 'Создать',
+        create: 'Создать метку',
         id: 'ID',
         name: 'Имя',
         createdAt: 'Дата создания',
