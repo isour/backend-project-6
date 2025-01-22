@@ -130,56 +130,67 @@ export default (app) => {
       { preValidation: app.authenticate },
       async (req, reply) => {
         const { id } = req.params;
+
         const { data: formData } = req.body;
-        const labelsIds = [_.get(formData, 'labels', [])].flat();
-        const existingLabels = await app.objection.models.label
+
+        const lb = Array.isArray(formData.labels)
+          ? formData.labels
+          : formData.labels.length > 0
+          ? [formData.labels]
+          : [];
+
+        const currentLabels = await app.objection.models.label
           .query()
-          .findByIds(labelsIds);
+          .findByIds(lb);
+
         const task = await app.objection.models.task.query().findById(id);
+
         const taskData = {
           ...task,
           ...formData,
-          statusId: Number(formData.statusId),
-          executorId: !formData.executorId ? null : Number(formData.executorId),
-          labels: existingLabels,
+          statusId: Number(req.body.data.statusId),
+          executorId: Number(req.body.data.executorId),
+          labels: currentLabels,
         };
 
         try {
-          await app.objection.models.task.transaction(async (trx) => {
+          console.log(taskData, '==========================');
+          await app.objection.models.task.transaction(async (trans) => {
             const updatedTask = await app.objection.models.task
-              .query(trx)
+              .query(trans)
               .allowGraph('labels')
               .upsertGraph(taskData, {
                 relate: true,
                 unrelate: true,
                 noDelete: true,
               });
+
             return updatedTask;
           });
 
-          req.flash('info', i18next.t('flash.task.edit.success'));
+          req.flash('info', i18next.t('flash.tasks.edit.success'));
           reply.redirect(app.reverse('tasks'));
         } catch ({ data }) {
-          const statuses = await app.objection.models.taskStatus.query();
           const users = await app.objection.models.user.query();
+          const statuses = await app.objection.models.taskStatus.query();
           const labels = await app.objection.models.label.query();
           task.$set({ ...formData, id });
 
-          req.flash('error', i18next.t('flash.task.edit.error'));
+          req.flash('error', i18next.t('flash.tasks.edit.error'));
           reply.code(422);
+
           reply.render('tasks/edit', {
             task,
-            errors: data,
             statuses,
             users,
             labels,
+            errors: data,
           });
         }
 
         return reply;
       }
     )
-
     .delete(
       '/tasks/:id',
       { preValidation: app.authenticate },
