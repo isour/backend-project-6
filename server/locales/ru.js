@@ -171,6 +171,7 @@ export default {
         creator: 'Автор',
         executor: 'Исполнитель',
         createdAt: 'Дата создания',
+        labels: 'Метки',
         filter: {
           status: 'Статус',
           executor: 'Исполнитель',

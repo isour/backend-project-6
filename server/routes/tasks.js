@@ -130,60 +130,56 @@ export default (app) => {
       { preValidation: app.authenticate },
       async (req, reply) => {
         const { id } = req.params;
-
         const { data: formData } = req.body;
-
-        const currentLabels = await app.objection.models.label
+        const labelsIds = [_.get(formData, 'labels', [])].flat();
+        const existingLabels = await app.objection.models.label
           .query()
-          .findByIds(formData.labels ? formData.label : []);
-
+          .findByIds(labelsIds);
         const task = await app.objection.models.task.query().findById(id);
-
         const taskData = {
           ...task,
           ...formData,
-          statusId: Number(req.body.data.statusId),
-          executorId: Number(req.body.data.executorId),
-          labels: currentLabels,
+          statusId: Number(formData.statusId),
+          executorId: !formData.executorId ? null : Number(formData.executorId),
+          labels: existingLabels,
         };
 
         try {
-          await app.objection.models.task.transaction(async (trans) => {
+          await app.objection.models.task.transaction(async (trx) => {
             const updatedTask = await app.objection.models.task
-              .query(trans)
+              .query(trx)
               .allowGraph('labels')
               .upsertGraph(taskData, {
                 relate: true,
                 unrelate: true,
                 noDelete: true,
               });
-
             return updatedTask;
           });
 
-          req.flash('info', i18next.t('flash.tasks.edit.success'));
+          req.flash('info', i18next.t('flash.task.edit.success'));
           reply.redirect(app.reverse('tasks'));
         } catch ({ data }) {
-          const users = await app.objection.models.user.query();
           const statuses = await app.objection.models.taskStatus.query();
+          const users = await app.objection.models.user.query();
           const labels = await app.objection.models.label.query();
           task.$set({ ...formData, id });
 
-          req.flash('error', i18next.t('flash.tasks.edit.error'));
+          req.flash('error', i18next.t('flash.task.edit.error'));
           reply.code(422);
-
           reply.render('tasks/edit', {
             task,
+            errors: data,
             statuses,
             users,
             labels,
-            errors: data,
           });
         }
 
         return reply;
       }
     )
+
     .delete(
       '/tasks/:id',
       { preValidation: app.authenticate },
