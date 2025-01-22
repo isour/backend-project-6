@@ -147,10 +147,10 @@ export default async (app, _options) => {
   addRoutes(app);
   addHooks(app);
 
-  app.setErrorHandler((error, request, response) => {
-    rollbar.error(error);
-    response.status(500).send({ message: 'Server error' });
-  });
+  // app.setErrorHandler((error, request, response) => {
+  //   rollbar.error(error);
+  //   response.status(500).send({ message: 'Server error' });
+  // });
 
   return app;
 };
