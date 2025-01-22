@@ -107,15 +107,16 @@ const registerPlugins = async (app) => {
   await app.register(fastifyPassport.initialize());
   await app.register(fastifyPassport.secureSession());
   await app.decorate('fp', fastifyPassport);
-  app.decorate('authenticate', (...args) =>
-    fastifyPassport.authenticate(
-      'form',
-      {
-        failureRedirect: app.reverse('root'),
-        failureFlash: i18next.t('flash.authError'),
-      }
-      // @ts-ignore
-    )(...args)
+  app.decorate('authenticate',
+    (...args) =>
+      fastifyPassport.authenticate(
+        'form',
+        {
+          failureRedirect: app.reverse('root'),
+          failureFlash: i18next.t('flash.authError'),
+        },
+        // @ts-ignore
+      )(...args),
   );
 
   await app.register(fastifyMethodOverride);
