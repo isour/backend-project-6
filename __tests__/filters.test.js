@@ -7,7 +7,7 @@ import { getTestData, prepareData, logIn } from './helpers/index.js';
 describe('test tasks CRUD', () => {
   let app;
   let knex;
-  let models;
+  // let models;
   let cookies;
   const testData = getTestData();
 
@@ -19,7 +19,7 @@ describe('test tasks CRUD', () => {
 
     await init(app);
     knex = app.objection.knex;
-    models = app.objection.models;
+    // models = app.objection.models;
 
     // TODO: пока один раз перед тестами
     // тесты не должны зависеть друг от друга

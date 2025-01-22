@@ -57,7 +57,10 @@ export default (app) => {
         const labels = await app.objection.models.label.query();
 
         reply.render('tasks/new', {
-          task, statuses, users, labels,
+          task,
+          statuses,
+          users,
+          labels,
         });
 
         return reply;
@@ -126,7 +129,10 @@ export default (app) => {
         task.$set({ ...task, labels: task.labels.map((label) => label.id) });
 
         reply.render('tasks/edit', {
-          task, statuses, users, labels,
+          task,
+          statuses,
+          users,
+          labels,
         });
         return reply;
       },
@@ -139,6 +145,7 @@ export default (app) => {
 
         const { data: formData } = req.body;
 
+        // eslint-disable-next-line
         const lb = Array.isArray(formData.labels)
           ? formData.labels
           : formData.labels.length > 0
