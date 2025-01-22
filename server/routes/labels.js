@@ -23,7 +23,7 @@ export default (app) => {
 
       try {
         const validLabel = await app.objection.models.label.fromJson(
-          req.body.data
+          req.body.data,
         );
         await app.objection.models.label.query().insert(validLabel);
         req.flash('info', i18next.t('flash.labels.create.success'));
@@ -32,7 +32,7 @@ export default (app) => {
         req.flash('error', i18next.t('flash.labels.create.error'));
         reply.code(422);
         reply.render('labels/new', {
-          label: label,
+          label,
           errors: err.data,
         });
       }
@@ -68,7 +68,7 @@ export default (app) => {
         }
 
         return reply;
-      }
+      },
     )
     .delete(
       '/labels/:id',
@@ -88,6 +88,6 @@ export default (app) => {
         reply.redirect(app.reverse('labels'));
 
         return reply;
-      }
+      },
     );
 };

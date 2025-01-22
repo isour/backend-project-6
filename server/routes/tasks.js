@@ -18,7 +18,9 @@ export default (app) => {
           .withGraphJoined('[status, creator, executor, labels]')
           .modify('sortByCreatedDate');
 
-        const { status, executor, label, isCreatorUser } = options;
+        const {
+          status, executor, label, isCreatorUser,
+        } = options;
         if (status) {
           query.modify('findByStatus', status);
         }
@@ -43,7 +45,7 @@ export default (app) => {
         });
 
         return reply;
-      }
+      },
     )
     .get(
       '/tasks/new',
@@ -54,10 +56,12 @@ export default (app) => {
         const statuses = await app.objection.models.taskStatus.query();
         const labels = await app.objection.models.label.query();
 
-        reply.render('tasks/new', { task, statuses, users, labels });
+        reply.render('tasks/new', {
+          task, statuses, users, labels,
+        });
 
         return reply;
-      }
+      },
     )
 
     .post('/tasks', { preValidation: app.authenticate }, async (req, reply) => {
@@ -121,9 +125,11 @@ export default (app) => {
         const labels = await app.objection.models.label.query();
         task.$set({ ...task, labels: task.labels.map((label) => label.id) });
 
-        reply.render('tasks/edit', { task, statuses, users, labels });
+        reply.render('tasks/edit', {
+          task, statuses, users, labels,
+        });
         return reply;
-      }
+      },
     )
     .patch(
       '/tasks/:id',
@@ -136,8 +142,8 @@ export default (app) => {
         const lb = Array.isArray(formData.labels)
           ? formData.labels
           : formData.labels.length > 0
-          ? [formData.labels]
-          : [];
+            ? [formData.labels]
+            : [];
 
         const currentLabels = await app.objection.models.label
           .query()
@@ -189,7 +195,7 @@ export default (app) => {
         }
 
         return reply;
-      }
+      },
     )
     .delete(
       '/tasks/:id',
@@ -216,7 +222,7 @@ export default (app) => {
 
         reply.redirect(app.reverse('tasks'));
         return reply;
-      }
+      },
     )
     .get(
       '/tasks/:id',
@@ -230,6 +236,6 @@ export default (app) => {
 
         reply.render('tasks/inner', { task });
         return reply;
-      }
+      },
     );
 };

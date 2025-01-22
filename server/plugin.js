@@ -97,24 +97,20 @@ const registerPlugins = async (app) => {
     },
   });
 
-  fastifyPassport.registerUserDeserializer((user) =>
-    app.objection.models.user.query().findById(user.id)
-  );
+  fastifyPassport.registerUserDeserializer((user) => app.objection.models.user.query().findById(user.id));
   fastifyPassport.registerUserSerializer((user) => Promise.resolve(user));
   fastifyPassport.use(new FormStrategy('form', app));
   await app.register(fastifyPassport.initialize());
   await app.register(fastifyPassport.secureSession());
   await app.decorate('fp', fastifyPassport);
-  app.decorate('authenticate', (...args) =>
-    fastifyPassport.authenticate(
-      'form',
-      {
-        failureRedirect: app.reverse('root'),
-        failureFlash: i18next.t('flash.authError'),
-      }
-      // @ts-ignore
-    )(...args)
-  );
+  app.decorate('authenticate', (...args) => fastifyPassport.authenticate(
+    'form',
+    {
+      failureRedirect: app.reverse('root'),
+      failureFlash: i18next.t('flash.authError'),
+    },
+    // @ts-ignore
+  )(...args));
 
   await app.register(fastifyMethodOverride);
   await app.register(fastifyObjectionjs, {
@@ -147,10 +143,10 @@ export default async (app, _options) => {
   addRoutes(app);
   addHooks(app);
 
-  // app.setErrorHandler((error, request, response) => {
-  //   rollbar.error(error);
-  //   response.status(500).send({ message: 'Server error' });
-  // });
+  app.setErrorHandler((error, request, response) => {
+    rollbar.error(error);
+    response.status(500).send({ message: 'Server error' });
+  });
 
   return app;
 };

@@ -15,7 +15,7 @@ export default (app) => {
       (req, reply) => {
         const taskStatus = new app.objection.models.taskStatus();
         reply.render('statuses/new', { taskStatus });
-      }
+      },
     )
     .post(
       '/statuses',
@@ -26,7 +26,7 @@ export default (app) => {
 
         try {
           const validStatus = await app.objection.models.taskStatus.fromJson(
-            req.body.data
+            req.body.data,
           );
           await app.objection.models.taskStatus.query().insert(validStatus);
           req.flash('info', i18next.t('flash.statuses.create.success'));
@@ -41,7 +41,7 @@ export default (app) => {
         }
 
         return reply;
-      }
+      },
     )
     .get(
       '/statuses/:id/edit',
@@ -54,7 +54,7 @@ export default (app) => {
           .findById(id);
         reply.render('statuses/edit', { taskStatus: status });
         return reply;
-      }
+      },
     )
     .patch(
       '/statuses/:id',
@@ -79,7 +79,7 @@ export default (app) => {
         }
 
         return reply;
-      }
+      },
     )
     .delete(
       '/statuses/:id',
@@ -96,6 +96,6 @@ export default (app) => {
 
         reply.redirect(app.reverse('statuses'));
         return reply;
-      }
+      },
     );
 };
